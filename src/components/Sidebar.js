@@ -3,6 +3,11 @@ import { CourseContext } from "../context/CourseContext";
 
 function Sidebar(props) {
   const { publicKey, balance } = useContext(CourseContext);
+
+  function Restart() {
+    localStorage._publicKey = "";
+    window.location.replace("/create");
+  }
   return (
     <div className="card">
       <ul
@@ -14,14 +19,14 @@ function Sidebar(props) {
           style={{ backgroundColor: "#05c0a5", borderRadius: "20px" }}
         >
           <div className="card-body">
-            <h5 className="card-title">MY ACOUNT</h5>
+            <h5 className="card-title">MY WALLET</h5>
             <p className="card-text">
               #
               {publicKey.slice(0, 15) +
                 " ... " +
                 publicKey.slice(publicKey.length - 5, publicKey.length)}
             </p>
-            <h1>$ {balance}.00</h1>
+            <h1>&#920; {balance}.00</h1>
           </div>
         </li>
         <li className="list-group-item list-group-item-success rounded-3 my-2 text-center">
@@ -40,7 +45,10 @@ function Sidebar(props) {
             <h5>History</h5>
           </a>
         </li>
-        <li className="list-group-item list-group-item-danger rounded-3 my-5 text-center">
+        <li
+          className="list-group-item list-group-item-danger rounded-3 my-5 text-center"
+          onClick={Restart}
+        >
           <h5>Restart</h5>
         </li>
       </ul>

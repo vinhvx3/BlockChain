@@ -3,13 +3,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import HomeScreen from "./screens/HomeScreen";
-import AddScreen from "./screens/AddScreen";
 import { CourseProvider } from "./context/CourseContext";
 import Sidebar from "./components/Sidebar";
 
 import logo from "./logo.svg";
 import { useEffect } from "react";
-import CreateScreen from "./screens/CreateScreen";
+import CreateWalletScreen from "./screens/CreateWalletScreen";
+import ReceiveScreen from "./screens/ReceiveScreen";
 
 function App() {
   useEffect(() => {
@@ -23,7 +23,7 @@ function App() {
         <div className="App">
           <div className="row">
             <div className="col-3">
-              <Sidebar />
+              {localStorage._publicKey && <Sidebar />}
             </div>
             <div className="col-9 container">
               <div className="card mt-2">
@@ -45,11 +45,11 @@ function App() {
                 </div>
               </div>
               <Switch>
-                <Route exact path="/add">
-                  <AddScreen />
+                <Route exact path="/receive">
+                  <ReceiveScreen />
                 </Route>
                 <Route exact path="/create">
-                  <CreateScreen />
+                  <CreateWalletScreen />
                 </Route>
                 <Route exact path="/">
                   <HomeScreen />

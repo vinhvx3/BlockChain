@@ -1,7 +1,6 @@
 const hash = require("crypto-js/sha256");
 const EC = require("elliptic").ec;
 const ec = new EC("secp256k1");
-const debug = require("debug")("savjeecoin:blockchain");
 
 export class Transaction {
   constructor(fromAddress, toAddress, amount) {
@@ -30,10 +29,6 @@ export class Transaction {
 
   isValid() {
     if (this.fromAddress === null) return true;
-
-    if (!this.signature || this.signature.length === 0) {
-      throw new Error("No signature in this transaction");
-    }
 
     const publicKey = ec.keyFromPublic(this.fromAddress, "hex");
     return publicKey.verify(this.calculateHash(), this.signature);
@@ -109,15 +104,21 @@ export class Blockchain {
     );
     block.mineBlock(this.difficulty);
 
-    debug("Block successfully mined!");
+    console.log("Block successfully mined!");
     this.chain.push(block);
 
     this.pendingTransactions = [];
   }
 
   addTransaction(transaction) {
-    if (!transaction.fromAddress || !transaction.toAddress) {
-      throw new Error("Transaction must include from and to address");
+    if (transaction.fromAddress === null) {
+      this.pendingTransactions.push(transaction);
+
+      return
+    }
+
+    if (!transaction.toAddress) {
+      throw new Error("Transaction must include to address");
     }
 
     // Verify the transactiion
@@ -157,7 +158,6 @@ export class Blockchain {
     }
 
     this.pendingTransactions.push(transaction);
-    debug("transaction added: %s", transaction);
   }
 
   getBalanceOfAddress(address) {
@@ -175,7 +175,6 @@ export class Blockchain {
       }
     }
 
-    debug("getBalanceOfAdrees: %s", balance);
     return balance;
   }
 
@@ -190,7 +189,6 @@ export class Blockchain {
       }
     }
 
-    debug("get transactions for wallet count: %s", txs.length);
     return txs;
   }
 

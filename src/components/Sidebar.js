@@ -5,7 +5,7 @@ function Sidebar(props) {
   const { publicKey, balance } = useContext(CourseContext);
 
   function Restart() {
-    localStorage._publicKey = "";
+    localStorage._privateKey = "";
     window.location.replace("/create");
   }
   return (

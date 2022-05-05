@@ -16,24 +16,27 @@ export function CourseProvider(props) {
   const [myCoin, setMyCoin] = useState(null);
 
   useEffect(() => {
-    if (localStorage._publicKey) {
-      setPublicKey(localStorage._publicKey);
-      console.log("dmmmmmm", localStorage._privateKey);
+    if (localStorage._privateKey && myCoin === null) {
+  
       const EC = new ec("secp256k1");
 
-      console.log(EC);
-      // const _myKey = EC.keyFromPublic(localStorage._publicKey);
+
 
       const _myKey = EC.keyFromPrivate(localStorage._privateKey);
+      const _publicKey = _myKey.getPublic('hex');
 
-      // console.log(_myKey);
 
+      
       const _myCoin = new Blockchain();
 
+    
+
+      setPrivateKey(localStorage._privateKey)
+      setPublicKey(_publicKey)
       setMyKey(_myKey);
       setMyCoin(_myCoin);
-    }
-  }, []);
+    } 
+  }, [myCoin]);
 
   async function CreateWallet(pin) {
     const EC = new ec("secp256k1");
@@ -52,7 +55,6 @@ export function CourseProvider(props) {
     const _privateKey = key.getPrivate("hex");
     setPrivateKey(_privateKey);
 
-    localStorage._publicKey = _publicKey;
     localStorage._privateKey = _privateKey;
 
     setMyKey(key);
@@ -68,7 +70,6 @@ export function CourseProvider(props) {
 
   function ReceiveCoin(value) {
     const transaction = new Transaction(null, publicKey, value);
-    transaction.signTransaction(myKey);
     myCoin.addTransaction(transaction);
     GetBalance();
   }
@@ -93,12 +94,14 @@ export function CourseProvider(props) {
       value={{
         publicKey,
         setPublicKey,
+        privateKey,
         balance,
         setBalance,
         CreateWallet,
         ReceiveCoin,
         SendCoin,
         Mine,
+        myCoin
       }}
     >
       {props.children}

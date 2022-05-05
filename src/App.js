@@ -1,7 +1,7 @@
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route , Link} from "react-router-dom";
 import HomeScreen from "./screens/HomeScreen";
 import { CourseProvider } from "./context/CourseContext";
 import Sidebar from "./components/Sidebar";
@@ -10,10 +10,11 @@ import logo from "./logo.svg";
 import { useEffect } from "react";
 import CreateWalletScreen from "./screens/CreateWalletScreen";
 import ReceiveScreen from "./screens/ReceiveScreen";
+import PendingTransactions from "./screens/PendingTransactions";
 
 function App() {
   useEffect(() => {
-    if (!localStorage._publicKey && window.location.pathname !== "/create") {
+    if (!localStorage._privateKey && window.location.pathname !== "/create") {
       window.location.replace("/create");
     }
   }, []);
@@ -23,7 +24,7 @@ function App() {
         <div className="App">
           <div className="row">
             <div className="col-3">
-              {localStorage._publicKey && <Sidebar />}
+              {localStorage._privateKey && <Sidebar />}
             </div>
             <div className="col-9 container">
               <div className="card mt-2">
@@ -33,22 +34,26 @@ function App() {
                     <h3>MyCoin</h3>
                   </div>
 
-                  <a
+                  <Link
                     className="btn"
                     style={{ background: "#b2bddc" }}
-                    href="/pending"
+                    to={location => ({ ...location, pathname: "/pending" })}
                     role="button"
                   >
+ 
                     <i className="fa fa-plus" aria-hidden="true"></i>
                     Pending transactions
-                  </a>
+                  </Link>
                 </div>
               </div>
               <Switch>
-                <Route exact path="/receive">
+              <Route  path="/pending" component={PendingTransactions}>
+
+                </Route>
+                <Route  path="/receive">
                   <ReceiveScreen />
                 </Route>
-                <Route exact path="/create">
+                <Route  path="/create">
                   <CreateWalletScreen />
                 </Route>
                 <Route exact path="/">

@@ -30,6 +30,7 @@ function ReceiveScreen(props) {
         style={{ width: "100%" }}
         onClick={() => {
           ReceiveCoin(parseInt(coin));
+          setCoin(0);
         }}
       >
         Continue

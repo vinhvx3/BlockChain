@@ -15,27 +15,23 @@ export function CourseProvider(props) {
 
   const [myCoin, setMyCoin] = useState(null);
 
+  const [pendingLength, setPendingLength] = useState(0);
+
   useEffect(() => {
+    console.log("hiiiiiii");
     if (localStorage._privateKey && myCoin === null) {
-  
       const EC = new ec("secp256k1");
 
-
-
       const _myKey = EC.keyFromPrivate(localStorage._privateKey);
-      const _publicKey = _myKey.getPublic('hex');
+      const _publicKey = _myKey.getPublic("hex");
 
-
-      
       const _myCoin = new Blockchain();
 
-    
-
-      setPrivateKey(localStorage._privateKey)
-      setPublicKey(_publicKey)
+      setPrivateKey(localStorage._privateKey);
+      setPublicKey(_publicKey);
       setMyKey(_myKey);
       setMyCoin(_myCoin);
-    } 
+    }
   }, [myCoin]);
 
   async function CreateWallet(pin) {
@@ -71,18 +67,24 @@ export function CourseProvider(props) {
   function ReceiveCoin(value) {
     const transaction = new Transaction(null, publicKey, value);
     myCoin.addTransaction(transaction);
-    GetBalance();
+    setPendingLength(myCoin.pendingTransactions.length);
   }
 
   function SendCoin(dist, value) {
     const transaction = new Transaction(publicKey, dist, value);
     transaction.signTransaction(myKey);
-    myCoin.addTransaction(transaction);
-    GetBalance();
+    try {
+      myCoin.addTransaction(transaction);
+    } catch (error) {
+      alert(error);
+    }
+    setPendingLength(myCoin.pendingTransactions.length);
   }
 
   function Mine() {
     myCoin.minePendingTransactions(publicKey);
+    setPendingLength(myCoin.pendingTransactions.length);
+    GetBalance();
   }
 
   function GetBalance() {
@@ -101,7 +103,9 @@ export function CourseProvider(props) {
         ReceiveCoin,
         SendCoin,
         Mine,
-        myCoin
+        myCoin,
+        pendingLength,
+        setPendingLength,
       }}
     >
       {props.children}

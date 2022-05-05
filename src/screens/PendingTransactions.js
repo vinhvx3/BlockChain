@@ -1,18 +1,29 @@
-import React, { useContext } from 'react';
-import { CourseContext } from '../context/CourseContext';
+import React, { useContext, useState } from "react";
+import { CourseContext } from "../context/CourseContext";
 
 function PendingTransactions(props) {
+  const { myCoin, Mine } = useContext(CourseContext);
 
-    const {myCoin} = useContext(CourseContext)
+  const [list, setList] = useState(myCoin ? myCoin.pendingTransactions : []);
 
-    return (
-        <div className="container mt-3 mb-3">
+  useContext(() => {
+    if (myCoin) {
+      setList(myCoin.pendingTransactions);
+    }
+  }, [myCoin]);
+
+  function mine() {
+    Mine();
+    setList(myCoin.pendingTransactions);
+  }
+
+  return (
+    <div className="container mt-3 mb-3">
       <div className="row">
         <div className="col-sm-12">
           <div className="card">
             <h4 className="card-header d-flex justify-content-between">
-            Pending Transactions
-              
+              Pending Transactions
             </h4>
             <div className="card-body">
               <table className="table">
@@ -26,12 +37,16 @@ function PendingTransactions(props) {
                   </tr>
                 </thead>
                 <tbody id="data-container">
-                  {myCoin && myCoin.pendingTransactions.map((item, index) => {
+                  {list.map((item, index) => {
                     return (
                       <tr key={index}>
                         <td>{index}</td>
-                        <td>{item.fromAddress === null ? 'Banking' : item.fromAddress}</td>
-                        <td>{item.toAddress}</td>
+                        <td className="address">
+                          {item.fromAddress === null
+                            ? "Banking"
+                            : item.fromAddress}
+                        </td>
+                        <td className="address">{item.toAddress}</td>
                         <td>{item.amount}</td>
                         <td>{item.timestamp}</td>
                       </tr>
@@ -40,11 +55,19 @@ function PendingTransactions(props) {
                 </tbody>
               </table>
             </div>
+
+            <button
+              type="button"
+              className="btn btn-success m-5"
+              onClick={mine}
+            >
+              Mine
+            </button>
           </div>
         </div>
       </div>
     </div>
-    );
+  );
 }
 
 export default PendingTransactions;

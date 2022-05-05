@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { Link } from "react-router-dom";
 import { CourseContext } from "../context/CourseContext";
 
 function Sidebar(props) {
@@ -30,20 +31,20 @@ function Sidebar(props) {
           </div>
         </li>
         <li className="list-group-item list-group-item-success rounded-3 my-2 text-center">
-          <a href="/receive">
+          <Link to="/receive">
             <h5>Receive</h5>
-          </a>
+          </Link>
         </li>
 
         <li className="list-group-item list-group-item-success rounded-3 my-2 text-center">
-          <a href="/send">
+          <Link to="/send">
             <h5>Send</h5>
-          </a>
+          </Link>
         </li>
         <li className="list-group-item list-group-item-success rounded-3 my-2 text-center">
-          <a href="/history">
+          <Link to="/history">
             <h5>History</h5>
-          </a>
+          </Link>
         </li>
         <li
           className="list-group-item list-group-item-danger rounded-3 my-5 text-center"
